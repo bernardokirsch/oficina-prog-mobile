@@ -6,33 +6,38 @@
 
 <ion-content padding-top>
 
-  <form [formGroup]="clienteForm" (ngSubmit)="submit()">
+  <form #form="ngForm" [formGroup]="clienteForm" (submit)="submit()">
     <ion-item no-padding>
       <ion-label position="floating">Nome</ion-label>
       <ion-input formControlName="nome" type="text"></ion-input>
+      <small class="error-message" *ngIf="(clienteForm.get('nome')?.errors?.['required'] || clienteForm.get('nome')?.errors?.['minlength'] || clienteForm.get('nome')?.errors?.['maxlength']) && (form.submitted || clienteForm.get('nome')?.touched)">Informe o nome (3 a 50 caracteres)</small>
     </ion-item>
 
     <ion-item no-padding>
       <ion-label position="floating">E-mail</ion-label>
       <ion-input formControlName="email" type="email"></ion-input>
+      <small class="error-message" *ngIf="(clienteForm.get('email')?.errors?.['required'] || clienteForm.get('email')?.errors?.['email']) && (form.submitted || clienteForm.get('email')?.touched)">Informe um email válido</small>
     </ion-item>
     
     <ion-item no-padding>
       <ion-label position="floating">Telefone</ion-label>
       <ion-input formControlName="tel" type="tel"></ion-input>
+      <small class="error-message" *ngIf="(clienteForm.get('tel')?.errors?.['required']) && (form.submitted || clienteForm.get('tel')?.touched)">Informe o telefone</small>
     </ion-item>
 
     <ion-item no-padding>
       <ion-label position="floating">Renda</ion-label>
       <ion-input formControlName="renda" type="number"></ion-input>
+      <small class="error-message" *ngIf="(clienteForm.get('renda')?.errors?.['required'] || clienteForm.get('renda')?.errors?.['min']) && (form.submitted || clienteForm.get('renda')?.touched)">Informe uma renda positiva</small>
     </ion-item>
     
     <ion-item no-padding>
       <ion-label position="floating">Data de Nascimento</ion-label>
       <ion-input formControlName="nascimento" type="text"></ion-input>
+      <small class="error-message" *ngIf="(clienteForm.get('nascimento')?.errors?.['required']) && (form.submitted || clienteForm.get('nascimento')?.touched)">Informe uma data de nascimento</small>
     </ion-item>
 
-    <ion-button shape="round" color="primary" expand="block" padding type="submit()">Confirmar</ion-button>
+    <ion-button shape="round" color="primary" expand="block" padding type="submit">Confirmar</ion-button>
   </form>
 
 </ion-content>
