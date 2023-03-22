@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController } from '@ionic/angular'
+import { ToastController } from '@ionic/angular'
 
 @Component({
   selector: 'app-cliente-add-edit',
@@ -17,7 +19,17 @@ export class ClienteAddEditPage implements OnInit {
   hasErrors = false;
   errorMessage: string[] | undefined;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private alertController: AlertController, private toastController: ToastController) {}
+
+  async presentAlert(header: string, subHeader: string, message: string, buttons: string[]) {
+    const alert = await this.alertController.create({
+      header,
+      subHeader,
+      message, 
+      buttons
+    });
+    await alert.present();
+  }
 
   validationMessages = {
     nome: [
@@ -38,6 +50,15 @@ export class ClienteAddEditPage implements OnInit {
     nascimento: [
       { type: 'required', message: 'Data de nascimento é obrigatória' }
     ]
+  }
+
+  async presentToast(message: string, duration: number, position: 'top' | 'bottom') {
+    const toast = await this.toastController.create({
+      message,
+      duration,
+      position
+    });
+    toast.present();
   }
 
   ngOnInit() {
@@ -63,8 +84,8 @@ export class ClienteAddEditPage implements OnInit {
 
   public nome: string | undefined;
 
-  submit() {
-    /* this.errorMessage = [];
+  async submit() {
+    this.errorMessage = [];
     if (this.clienteForm.get('nome')!.hasError('required')) {
       this.errorMessage.push('Nome é obrigatório');
     }
@@ -80,9 +101,14 @@ export class ClienteAddEditPage implements OnInit {
     if (this.clienteForm.get('nascimento')!.hasError('required')) {
       this.errorMessage.push('Data de nascimento é obrigatória');
     }
-    this.hasErrors = this.errorMessage.length > 0; */
+    this.hasErrors = this.errorMessage.length > 0;
+    if (!this.hasErrors) {
+      await this.presentAlert('Sucesso', 'Gravação bem sucedida', 'Os dados do cliente foram gravados', ['Ok']);
+    }
+    if (!this.hasErrors) {
+      await this.presentToast('Gravação bem sucedida', 3000, 'top');
+    }
   }
-
 }
 
 
