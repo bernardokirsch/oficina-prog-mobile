@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TipoServicosService } from 'src/app/services/tipo-servicos.service';
 
 @Component({
   selector: 'app-tipo-servicos-listagem',
@@ -7,16 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TipoServicosListagemPage implements OnInit {
 
-  constructor() { }
+  constructor(private tipoServicoService: TipoServicosService) { }
 
-  public tiposServicos = [
-    { id: 1, nome: 'Alinhamento', valor: 12.34 },
-    { id: 2, nome: 'Balanceamento', valor: 56.78 },
-    { id: 3, nome: 'Revisão Freios', valor: 90.12 },
-    { id: 4, nome: 'Suspensão', valor: 34.56 }
-  ];
+  public tiposServicos!: any;
 
   ngOnInit() {
+    this.tiposServicos = this.tipoServicoService.getAll();
   }
 
 }

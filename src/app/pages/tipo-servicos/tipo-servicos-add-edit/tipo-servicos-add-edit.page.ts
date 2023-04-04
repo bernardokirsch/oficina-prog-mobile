@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TipoServico } from 'src/app/models/tipo-servico.model';
 import { TipoServicosService } from 'src/app/services/tipo-servicos.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-tipo-servicos-add-edit',
@@ -11,25 +13,32 @@ import { TipoServicosService } from 'src/app/services/tipo-servicos.service';
 
 export class TipoServicosAddEditPage implements OnInit {
 
-  public tipoServico: any;
+  private tipoServico!: TipoServico;
   public modoDeEdicao = false;
   public tiposServicosForm!: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private tipoServicoService: TipoServicosService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastService: ToastService,
+    private router: Router
   ) { }
 
   iniciarEdicao() {
     this.modoDeEdicao = true;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
-    this.tipoServico = this.tipoServicoService.getById(id);
+    if (id > 0) {
+      this.tipoServico = this.tipoServicoService.getById(id);
+    } else {
+      this.tipoServico = {id, nome: '', valor: 0.00};
+      this.modoDeEdicao = true;
+    }
     this.tiposServicosForm = this.formBuilder.group({
-      id,
+      id: [this.tipoServico.id],
       nome: [this.tipoServico.nome, Validators.required],
       valor: [this.tipoServico.valor, Validators.required]
     });
@@ -37,10 +46,13 @@ export class TipoServicosAddEditPage implements OnInit {
 
   submit() {
     this.tipoServicoService.update(this.tiposServicosForm.value);
+    this.toastService.presentToast('Gravação bem sucedida', 3000, 'top');
+    this.router.navigateByUrl('');
     this.modoDeEdicao = false;
   }
 
   cancelarEdicao() {
-    
+    this.tiposServicosForm.setValue(this.tipoServico);
+    this.modoDeEdicao = false;
   }
 }
