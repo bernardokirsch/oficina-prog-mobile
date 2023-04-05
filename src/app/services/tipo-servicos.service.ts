@@ -25,7 +25,7 @@ export class TipoServicosService {
     private getIndexOfElement(id: number): number {
         return this.tiposServicos.indexOf(this.getById(id));
     }
-    
+
     update(tipoServico: TipoServico) {
         if (tipoServico.id < 0) {
             tipoServico.id = this.tiposServicos[this.tiposServicos.length - 1].id + 1;
@@ -37,6 +37,10 @@ export class TipoServicosService {
 
     getAll(): TipoServico[] {
         return this.tiposServicos;
+    }
+
+    remove(tipoServico: TipoServico) {
+        this.tiposServicos.splice(this.getIndexOfElement(tipoServico.id), 1);
     }
 
 }
